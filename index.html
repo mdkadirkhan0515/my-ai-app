@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My AI Chat</title>
+    <style>
+        body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+        #chatbox { height: 300px; overflow-y: auto; background: white; padding: 10px; border: 1px solid #ccc; margin-bottom: 10px; }
+        input { width: 70%; padding: 10px; }
+        button { padding: 10px; background: blue; color: white; border: none; }
+    </style>
+</head>
+<body>
+    <h3>Gemini AI Chat</h3>
+    <div id="chatbox"></div>
+    <input type="text" id="userInput" placeholder="কিছু লিখুন...">
+    <button onclick="sendMessage()">Send</button>
+
+    <script>
+        async function sendMessage() {
+            const input = document.getElementById('userInput');
+            const box = document.getElementById('chatbox');
+            const message = input.value;
+            if(!message) return;
+
+            box.innerHTML += `<p><b>You:</b> ${message}</p>`;
+            input.value = '';
+
+            // এখানে আপনার Vercel URL বসবে (ডিপ্লয় করার পর)
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ message: message })
+            });
+            const data = await response.json();
+            box.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+        }
+    </script>
+</body>
+</html>
