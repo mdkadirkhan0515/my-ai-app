@@ -1,39 +1,71 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My AI Chat</title>
     <style>
-        body { font-family: Arial; padding: 20px; background: #f4f4f4; }
-        #chatbox { height: 300px; overflow-y: auto; background: white; padding: 10px; border: 1px solid #ccc; margin-bottom: 10px; }
-        input { width: 70%; padding: 10px; }
-        button { padding: 10px; background: blue; color: white; border: none; }
+        body { font-family: sans-serif; padding: 20px; background: #eee; }
+        #chatbox { height: 400px; overflow-y: auto; background: white; padding: 15px; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; }
+        .user { color: blue; margin-bottom: 10px; }
+        .ai { color: green; margin-bottom: 20px; font-weight: bold; }
+        .input-area { display: flex; gap: 5px; }
+        input { flex-grow: 1; padding: 10px; border-radius: 5px; border: 1px solid #ccc; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
-    <h3>Gemini AI Chat</h3>
+
+    <h3>Gemini AI Bot</h3>
     <div id="chatbox"></div>
-    <input type="text" id="userInput" placeholder="কিছু লিখুন...">
-    <button onclick="sendMessage()">Send</button>
+    
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="কিছু লিখুন...">
+        <button onclick="sendMessage()" id="sendBtn">Send</button>
+    </div>
 
     <script>
         async function sendMessage() {
             const input = document.getElementById('userInput');
             const box = document.getElementById('chatbox');
-            const message = input.value;
-            if(!message) return;
+            const btn = document.getElementById('sendBtn');
+            const message = input.value.trim();
 
-            box.innerHTML += `<p><b>You:</b> ${message}</p>`;
+            if (!message) return;
+
+            // ইউজার মেসেজ দেখানো
+            box.innerHTML += `<div class="user"><b>You:</b> ${message}</div>`;
             input.value = '';
+            btn.disabled = true; // পাঠানোর সময় বাটন বন্ধ থাকবে
+            
+            box.innerHTML += `<div class="ai" id="loading">AI লিখছে...</div>`;
+            box.scrollTop = box.scrollHeight;
 
-            // এখানে আপনার Vercel URL বসবে (ডিপ্লয় করার পর)
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: message })
-            });
-            const data = await response.json();
-            box.innerHTML += `<p><b>AI:</b> ${data.reply}</p>`;
+            try {
+                // এখানে '/api/chat' ব্যবহার করা হয়েছে কারণ ফাইলটি একই ডোমেইনে থাকবে
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+
+                const data = await response.json();
+                
+                // লোডিং মেসেজটি সরিয়ে উত্তর বসানো
+                document.getElementById('loading').remove();
+                
+                if (data.reply) {
+                    box.innerHTML += `<div class="ai"><b>AI:</b> ${data.reply}</div>`;
+                } else {
+                    box.innerHTML += `<div class="ai" style="color:red"><b>Error:</b> ${data.error || "Unknown Error"}</div>`;
+                }
+            } catch (err) {
+                document.getElementById('loading').remove();
+                box.innerHTML += `<div class="ai" style="color:red"><b>Error:</b> কানেকশন সমস্যা!</div>`;
+            }
+
+            btn.disabled = false;
+            box.scrollTop = box.scrollHeight;
         }
     </script>
 </body>
