@@ -19,7 +19,11 @@ export default function Calculator() {
   // সংখ্যা বাটন চাপলে (0-9, 00)
   const inputDigit = (digit) => {
     if (waitingForOperand) {
-      setDisplay(digit === '00' ? '0' : digit);
+    if (digit === '00') {
+  setDisplay('0');
+} else {
+  setDisplay(digit);
+}
       setWaitingForOperand(false);
       return;
     }
