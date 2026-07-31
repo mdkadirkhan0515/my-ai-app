@@ -1,0 +1,113 @@
+import React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView } from 'react-native';
+
+const buttons = [
+  ['C', '⌫', '%', '÷'],
+  ['7', '8', '9', '×'],
+  ['4', '5', '6', '−'],
+  ['1', '2', '3', '+'],
+  ['00', '0', '.', '='],
+];
+
+export default function Calculator() {
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* ডিসপ্লে */}
+      <View style={styles.display}>
+        <Text style={styles.displaySubText}>0</Text>
+        <Text style={styles.displayMainText}>1,250</Text>
+      </View>
+
+      {/* বাটন গ্রিড */}
+      <View style={styles.grid}>
+        {buttons.map((row, i) => (
+          <View key={i} style={styles.row}>
+            {row.map((btn) => {
+              const isOperator = ['÷', '×', '−', '+', '='].includes(btn);
+              const isFunction = ['C', '⌫', '%'].includes(btn);
+              return (
+                <TouchableOpacity
+                  key={btn}
+                  style={[
+                    styles.button,
+                    isOperator && styles.operatorButton,
+                    isFunction && styles.functionButton,
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.buttonText,
+                      isOperator && styles.operatorText,
+                      isFunction && styles.functionText,
+                    ]}
+                  >
+                    {btn}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        ))}
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#0B0F19',
+    justifyContent: 'flex-end',
+    padding: 16,
+  },
+  display: {
+    marginBottom: 32,
+    alignItems: 'flex-end',
+  },
+  displaySubText: {
+    color: '#94A3B8',
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  displayMainText: {
+    color: '#F8FAFC',
+    fontSize: 56,
+    fontWeight: '300',
+  },
+  grid: { gap: 12 },
+  row: {
+    flexDirection: 'row',
+    gap: 12,
+    marginBottom: 12,
+  },
+  button: {
+    flex: 1,
+    aspectRatio: 1,
+    backgroundColor: 'rgba(30, 41, 59, 0.8)',
+    borderWidth: 1,
+    borderColor: 'rgba(56, 189, 248, 0.3)',
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  operatorButton: {
+    backgroundColor: '#38BDF8',
+    borderColor: '#38BDF8',
+  },
+  functionButton: {
+    backgroundColor: 'rgba(148, 163, 184, 0.15)',
+  },
+  buttonText: {
+    color: '#F8FAFC',
+    fontSize: 24,
+    fontWeight: '500',
+  },
+  operatorText: {
+    color: '#0B0F19',
+    fontWeight: '700',
+  },
+  functionText: {
+    color: '#94A3B8',
+    fontWeight: '600',
+  },
+});
