@@ -19,7 +19,7 @@ export default function Calculator() {
   // সংখ্যা বাটন চাপলে (0-9, 00)
   const inputDigit = (digit) => {
     if (waitingForOperand) {
-    if (digit === '00') {
+      if (digit === '00') {
   setDisplay('0');
 } else {
   setDisplay(digit);
@@ -27,7 +27,15 @@ export default function Calculator() {
       setWaitingForOperand(false);
       return;
     }
-    setDisplay(display === '0' ? (digit === '00' ? '0' : digit) : display + digit);
+if (display === '0') {
+  if (digit === '00') {
+    setDisplay('0');
+  } else {
+    setDisplay(digit);
+  }
+} else {
+  setDisplay(display + digit);
+}
   };
 
   // দশমিক বিন্দু
