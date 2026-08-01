@@ -20,22 +20,23 @@ export default function Calculator() {
   const inputDigit = (digit) => {
     if (waitingForOperand) {
       if (digit === '00') {
-  setDisplay('0');
-} else {
-  setDisplay(digit);
-}
+        setDisplay('0');
+      } else {
+        setDisplay(digit);
+      }
       setWaitingForOperand(false);
       return;
     }
-if (display === '0') {
-  if (digit === '00') {
-    setDisplay('0');
-  } else {
-    setDisplay(digit);
-  }
-} else {
-  setDisplay(display + digit);
-}
+
+    if (display === '0') {
+      if (digit === '00') {
+        setDisplay('0');
+      } else {
+        setDisplay(digit);
+      }
+    } else {
+      setDisplay(display + digit);
+    }
   };
 
   // দশমিক বিন্দু
@@ -61,10 +62,10 @@ if (display === '0') {
   const backspace = () => {
     if (waitingForOperand) return;
     if (display.length === 1) {
-  setDisplay('0');
-} else {
-  setDisplay(display.slice(0, -1));
-}
+      setDisplay('0');
+    } else {
+      setDisplay(display.slice(0, -1));
+    }
   };
 
   // %
